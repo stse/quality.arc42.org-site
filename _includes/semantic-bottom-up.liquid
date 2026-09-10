@@ -14,7 +14,7 @@
 {% endfor %}
 
 {% if matching_semantic_qualities.size > 0 %}
-<section class="semantic-quality-panel" aria-label="Semantic quality navigation">
+<section class="semantic-quality-panel" aria-label="Semantic quality navigation" data-semantic-only hidden>
   <div class="semantic-quality-panel__heading">
     <h2>Explore the quality intent</h2>
     <a href="{{ '/explore-quality/' | prepend: site.baseurl }}">Open semantic explorer →</a>
@@ -33,7 +33,7 @@
         <div class="semantic-card__topline">
           <span class="semantic-card__kind">{% if quality.kind == "characteristic" %}Characteristic{% else %}Quality concept{% endif %}</span>
         </div>
-        <h3>{% if quality.page %}<a href="{{ quality.page | prepend: site.baseurl }}">{{ quality.title }}</a>{% else %}{{ quality.title }}{% endif %}</h3>
+        <h3>{% if quality.page %}<a href="{{ quality.page | prepend: site.baseurl }}">{{ quality.title }}</a>{% else %}<a href="{{ '/explore-quality/#' | append: quality_id | prepend: site.baseurl }}">{{ quality.title }}</a>{% endif %}</h3>
         <p class="semantic-card__question">{{ quality.question }}</p>
         <div class="semantic-card__dimensions">
           {% for dimension in quality.dimensions %}<span>#{{ dimension }}</span>{% endfor %}
