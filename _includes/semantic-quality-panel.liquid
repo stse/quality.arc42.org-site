@@ -1,0 +1,70 @@
+{% assign semantic_model = site.data.semantic_quality_model %}
+{% assign semantic_slug = include.page.permalink | split: "/" | last %}
+{% assign semantic_quality = semantic_model.qualities[semantic_slug] %}
+
+{% if semantic_quality %}
+<section class="semantic-quality-panel" aria-labelledby="semantic-quality-heading">
+  <div class="semantic-quality-panel__heading">
+    <h2 id="semantic-quality-heading">Semantic quality model</h2>
+    <a href="{{ '/explore-quality/' | prepend: site.baseurl }}">Explore quality space →</a>
+  </div>
+
+  <p class="semantic-quality-panel__question"><strong>Architecture question:</strong> {{ semantic_quality.question }}</p>
+
+  <div class="semantic-quality-panel__grid">
+    <div class="semantic-quality-panel__cell">
+      <strong>Dimensions</strong>
+      <ul>
+        {% for dimension_id in semantic_quality.dimensions %}
+          {% assign dimension = semantic_model.dimensions[dimension_id] %}
+          <li><a href="{{ '/tag-' | append: dimension_id | prepend: site.baseurl }}">{{ dimension.label | default: dimension_id }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="semantic-quality-panel__cell">
+      <strong>Situation / stimulus</strong>
+      <ul>
+        {% for stimulus_id in semantic_quality.stimuli %}
+          {% assign stimulus = semantic_model.stimuli[stimulus_id] %}
+          <li title="{{ stimulus.question }}">{{ stimulus.label | default: stimulus_id }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="semantic-quality-panel__cell">
+      <strong>Desired response</strong>
+      <ul>
+        {% for response_id in semantic_quality.responses %}
+          {% assign response = semantic_model.responses[response_id] %}
+          <li title="{{ response.question }}">{{ response.label | default: response_id }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="semantic-quality-panel__cell">
+      <strong>Evaluation</strong>
+      <ul>
+        {% for measure_id in semantic_quality.measures %}
+          {% assign measure = semantic_model.measures[measure_id] %}
+          <li>{{ measure.label | default: measure_id }} {% if measure.preference %}<small>({{ measure.preference }})</small>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% if semantic_quality.relations and semantic_quality.relations.size > 0 %}
+    <p class="semantic-quality-panel__relations">
+      <strong>Typed relations:</strong>
+      {% for relation in semantic_quality.relations %}
+        {% assign target = semantic_model.qualities[relation.target] %}
+        {% if target.page %}
+          {{ relation.type }} <a href="{{ target.page | prepend: site.baseurl }}">{{ target.title }}</a>{% unless forloop.last %} · {% endunless %}
+        {% else %}
+          {{ relation.type }} <a href="{{ '/explore-quality/#' | append: relation.target | prepend: site.baseurl }}">{{ target.title | default: relation.target }}</a>{% unless forloop.last %} · {% endunless %}
+        {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+</section>
+{% endif %}
