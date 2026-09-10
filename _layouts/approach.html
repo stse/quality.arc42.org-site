@@ -42,6 +42,8 @@ from frontmatter - Content body - Supported qualities (cross-linked) - Trade-off
 
     <section class="post-content">{{ content }}</section>
 
+    {% include semantic-bottom-up.liquid page=page type="approach" %}
+
     <hr class="with-no-margin" />
 
     {% assign all_qualities = site.qualities %}
@@ -141,10 +143,6 @@ from frontmatter - Content body - Supported qualities (cross-linked) - Trade-off
       {% endunless %}
     </ul>
 
-    {% comment %} Related approaches — `related:` is declared on one page only;
-    this block renders the relation on both: forward from page.related, reverse
-    by scanning all approaches for ones that declare this page. The section is
-    omitted entirely when no relation exists. {% endcomment %}
     {% assign my_id = page.permalink | split: "/" | last %}
     {% assign has_related_approaches = false %}
     {% if page.related and page.related.size > 0 %}
