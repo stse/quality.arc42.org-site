@@ -3,7 +3,7 @@
 {% assign semantic_quality = semantic_model.qualities[semantic_slug] %}
 
 {% if semantic_quality %}
-<section class="semantic-quality-panel" aria-labelledby="semantic-quality-heading">
+<section class="semantic-quality-panel" aria-labelledby="semantic-quality-heading" data-semantic-only hidden>
   <div class="semantic-quality-panel__heading">
     <h2 id="semantic-quality-heading">Semantic quality model</h2>
     <a href="{{ '/explore-quality/' | prepend: site.baseurl }}">Explore quality space →</a>
