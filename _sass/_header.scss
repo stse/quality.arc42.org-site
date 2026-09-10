@@ -103,6 +103,48 @@
   outline: none;
 }
 
+.model-view-switcher {
+  align-items: center;
+  border: 1px solid var(--brand-cream-32);
+  border-radius: $radius-sm;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  white-space: nowrap;
+}
+
+.model-view-switcher__label {
+  color: var(--header-on-violet-muted);
+  font-size: $text-xs;
+  font-weight: 700;
+  margin: 0 0.35rem 0 0.25rem;
+}
+
+.model-view-switcher__option {
+  background: transparent;
+  border: 0;
+  border-radius: calc(#{$radius-sm} - 2px);
+  color: var(--header-on-violet-muted);
+  cursor: pointer;
+  font-family: $font-family;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 0.45rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.model-view-switcher__option:hover,
+.model-view-switcher__option.is-active {
+  background: var(--brand-cream-14);
+  color: var(--header-on-violet);
+}
+
+.model-view-switcher__option:focus-visible {
+  box-shadow: var(--focus-ring-on-violet);
+  outline: none;
+}
+
 .site-actions {
   align-items: center;
   display: grid;
@@ -149,7 +191,7 @@
   -webkit-box-sizing: border-box;
   appearance: none;
   background: var(--brand-cream-10);
-  border: 1px solid var(--brand-cream-46); // cream-24 measured 1.87:1 on violet — invisible boundary
+  border: 1px solid var(--brand-cream-46);
   border-radius: $radius-sm;
   box-sizing: border-box;
   color: var(--header-on-violet);
@@ -171,8 +213,6 @@
   &:focus {
     background: var(--brand-cream-16);
     border-color: var(--brand-cream-46);
-    // The site's most-used control gets the documented on-violet ring:
-    // the old cream-32 outline measured 2.29:1 (needs 3:1, SC 2.4.13).
     outline: none;
     box-shadow: var(--focus-ring-on-violet);
   }
@@ -252,7 +292,7 @@
 }
 
 .site-secondary-nav__label {
-  color: var(--brand-cream-74); // cream-48 measured 3.85:1 at 0.75rem — fails AA
+  color: var(--brand-cream-74);
   font-size: $text-xs;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -293,10 +333,8 @@
   }
 }
 
-@media screen and (max-width: $nav-compact-width) and (prefers-reduced-motion: reduce) {
-  .site-header {
-    transition: none;
-  }
+@media screen and (max-width: 1120px) {
+  .model-view-switcher__label { display: none; }
 }
 
 @media screen and (max-width: $nav-collapse-width) {
@@ -317,6 +355,9 @@
     flex-wrap: wrap;
     gap: 0.9rem;
   }
+
+  .model-view-switcher { align-self: stretch; justify-content: center; }
+  .model-view-switcher__option { flex: 1 1 0; }
 
   .site-actions {
     grid-template-columns: minmax(0, 1fr) 2.35rem;
