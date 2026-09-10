@@ -6,6 +6,8 @@
   const model = JSON.parse(modelNode.textContent || "{}");
   const qualities = Object.entries(model.qualities || {}).map(([id, q]) => ({ id, ...q }));
   const state = { dimensions: new Set(), stimuli: new Set(), responses: new Set(), measures: new Set() };
+  const axisOrder = ["dimensions", "stimuli", "responses", "measures"];
+  let activeStage = "dimensions";
 
   const byId = (id) => document.getElementById(id);
   const text = (value) => String(value || "").toLowerCase();
@@ -22,6 +24,96 @@
     });
   }
 
+  function setStage(axis) {
+    if (!axisOrder.includes(axis)) return;
+    activeStage = axis;
+    root.querySelectorAll("[data-semantic-stage]").forEach((stage) => {
+      stage.classList.toggle("is-active", stage.dataset.semanticStage === axis);
+    });
+    root.querySelectorAll("[data-journey-axis]").forEach((node) => {
+      node.classList.toggle("is-active", node.dataset.journeyAxis === axis);
+    });
+    root.querySelector("[data-semantic-results]")?.classList.remove("is-active");
+  }
+
+  function showResultsStage() {
+    root.querySelectorAll("[data-semantic-stage]").forEach((stage) => stage.classList.remove("is-active"));
+    root.querySelectorAll("[data-journey-axis]").forEach((node) => node.classList.remove("is-active"));
+    root.querySelector("[data-semantic-results]")?.classList.add("is-active");
+    root.querySelector("[data-journey-results]")?.classList.add("is-active");
+  }
+
+  function setupJourney() {
+    root.querySelectorAll("[data-journey-axis]").forEach((node) => {
+      node.addEventListener("click", () => setStage(node.dataset.journeyAxis));
+    });
+    root.querySelector("[data-journey-results]")?.addEventListener("click", showResultsStage);
+  }
+
+  function collectionForAxis(axis) {
+    return model[axis] || {};
+  }
+
+  function selectedLabel(axis, id) {
+    return collectionForAxis(axis)[id]?.label || id;
+  }
+
+  function updateJourney() {
+    const firstIncomplete = axisOrder.find((axis) => state[axis].size === 0);
+    const completedCount = axisOrder.filter((axis) => state[axis].size > 0).length;
+
+    root.querySelectorAll("[data-journey-axis]").forEach((node) => {
+      const axis = node.dataset.journeyAxis;
+      node.classList.toggle("is-complete", state[axis].size > 0);
+      node.classList.toggle("is-active", activeStage === axis && !root.querySelector("[data-semantic-results]")?.classList.contains("is-active"));
+    });
+
+    const resultNode = root.querySelector("[data-journey-results]");
+    resultNode?.classList.toggle("is-complete", completedCount > 0);
+
+    const trail = byId("semantic-path-trail");
+    const title = byId("semantic-path-title");
+    if (trail) {
+      trail.innerHTML = "";
+      const selectedEntries = [];
+      axisOrder.forEach((axis) => {
+        state[axis].forEach((id) => selectedEntries.push({ axis, id, label: selectedLabel(axis, id) }));
+      });
+      if (selectedEntries.length === 0) {
+        const empty = document.createElement("span");
+        empty.className = "semantic-path__empty";
+        empty.textContent = "No semantic constraints selected yet.";
+        trail.appendChild(empty);
+      } else {
+        selectedEntries.forEach((entry, index) => {
+          if (index > 0) {
+            const arrow = document.createElement("span");
+            arrow.className = "semantic-path__arrow";
+            arrow.textContent = "→";
+            trail.appendChild(arrow);
+          }
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "semantic-path__chip";
+          chip.textContent = entry.label;
+          chip.title = "Jump to this step";
+          chip.addEventListener("click", () => setStage(entry.axis));
+          trail.appendChild(chip);
+        });
+      }
+    }
+
+    if (title) {
+      if (completedCount === 0) title.textContent = "Start with any quality intent.";
+      else if (firstIncomplete) title.textContent = `Next: ${axisTitle(firstIncomplete)}`;
+      else title.textContent = "The semantic path is fully constrained. Review the matching concepts.";
+    }
+  }
+
+  function axisTitle(axis) {
+    return ({ dimensions: "Quality intent", stimuli: "Situation", responses: "Desired response", measures: "Evaluation" })[axis] || axis;
+  }
+
   function choice(containerId, collection, axis) {
     const container = byId(containerId);
     if (!container) return;
@@ -35,6 +127,7 @@
         if (state[axis].has(id)) state[axis].delete(id); else state[axis].add(id);
         button.classList.toggle("is-selected", state[axis].has(id));
         renderGuided();
+        updateJourney();
       });
       container.appendChild(button);
     });
@@ -85,7 +178,7 @@
     const active = Object.values(state).reduce((n, set) => n + set.size, 0);
     summary.textContent = active
       ? `${ranked.length} concepts match at least one selected semantic constraint. Stronger matches are shown first.`
-      : "Choose any combination above. The explorer ranks matching characteristics and specializations.";
+      : "Choose any combination along the path. The explorer ranks matching characteristics and specializations.";
 
     ranked.forEach(({ q, score, selected }) => container.appendChild(renderCard(q, active ? `${score}/${selected} matches` : "")));
   }
@@ -93,7 +186,9 @@
   function resetGuided() {
     Object.values(state).forEach((set) => set.clear());
     root.querySelectorAll(".semantic-choice.is-selected").forEach((el) => el.classList.remove("is-selected"));
+    setStage("dimensions");
     renderGuided();
+    updateJourney();
   }
 
   function facetGroup(title, axis, collection) {
@@ -173,6 +268,7 @@
   }
 
   modeSwitch();
+  setupJourney();
   choice("semantic-dimensions", model.dimensions, "dimensions");
   choice("semantic-stimuli", model.stimuli, "stimuli");
   choice("semantic-responses", model.responses, "responses");
@@ -183,4 +279,5 @@
   renderGuided();
   renderFacets();
   renderConceptIndex();
+  updateJourney();
 })();
