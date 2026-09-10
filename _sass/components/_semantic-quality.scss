@@ -63,48 +63,46 @@
 
 .semantic-journey {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 0.45rem;
-  align-items: stretch;
-  margin: 0.3rem 0 1rem;
+  grid-template-columns: minmax(0, 1.15fr) auto minmax(0, 1fr) auto minmax(0, 1.08fr) auto minmax(0, 0.92fr) auto minmax(0, 0.85fr);
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.8rem 0 1rem;
 }
 
 .semantic-journey__node {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: 0.55rem;
-  align-items: center;
-  min-width: 0;
+  min-height: 5rem;
   padding: 0.7rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
   text-align: left;
-  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
-}
-
-.semantic-journey__node:hover {
   background: var(--sq-soft);
 }
 
+.semantic-journey__node.is-complete,
 .semantic-journey__node.is-active {
   border-color: currentColor;
-  background: var(--sq-strong);
-  transform: translateY(-1px);
 }
 
-.semantic-journey__node.is-complete .semantic-journey__number::after {
-  content: "✓";
-  font-size: 0.72rem;
-  margin-left: 0.16rem;
+.semantic-journey__node.is-active {
+  border-width: 2px;
+  background: var(--sq-strong);
 }
 
 .semantic-journey__number {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--sq-border);
+  border-radius: 50%;
   display: grid;
   place-items: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  border-radius: 50%;
-  border: 1px solid var(--sq-border);
+  flex: 0 0 auto;
   font-weight: 700;
-  font-size: 0.82rem;
+}
+
+.semantic-journey__node.is-complete .semantic-journey__number {
+  background: currentColor;
+  color: white;
 }
 
 .semantic-journey__node strong,
@@ -113,82 +111,65 @@
 }
 
 .semantic-journey__node small {
-  margin-top: 0.12rem;
-  font-size: 0.75rem;
-  line-height: 1.25;
+  margin-top: 0.15rem;
   opacity: 0.68;
+  line-height: 1.25;
 }
 
 .semantic-journey__connector {
-  align-self: center;
-  font-size: 1.05rem;
-  opacity: 0.4;
+  opacity: 0.5;
+  font-size: 1.2rem;
 }
 
 .semantic-path {
-  margin: 0 0 1.1rem;
-  padding: 0.9rem 1rem;
   border: 1px solid var(--sq-border);
   border-radius: 0.7rem;
   background: var(--sq-soft);
+  padding: 0.8rem 0.9rem;
+  margin: 1rem 0 1.4rem;
 }
 
 .semantic-path__heading {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  align-items: start;
 }
 
-.semantic-path__heading strong {
+.semantic-path__heading strong,
+.semantic-path__eyebrow {
   display: block;
-  margin-top: 0.12rem;
 }
 
+.semantic-path__heading strong { margin-top: 0.15rem; }
 .semantic-path__trail {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.7rem;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
 }
 
 .semantic-path__chip {
-  padding: 0.3rem 0.55rem;
-  font-size: 0.83rem;
-  background: rgba(127, 127, 127, 0.07);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: white;
 }
 
-.semantic-path__chip:hover {
-  background: var(--sq-strong);
-}
+.semantic-path__chip--static { cursor: default; }
+.semantic-path__arrow { opacity: 0.5; }
+.semantic-path__empty { opacity: 0.65; font-style: italic; }
 
-.semantic-path__arrow,
-.semantic-path__empty {
-  opacity: 0.58;
-  font-size: 0.82rem;
-}
-
-.semantic-stage,
-.semantic-stage--results {
-  display: none;
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--sq-border);
-  border-radius: 0.75rem;
-}
-
-.semantic-stage.is-active,
-.semantic-stage--results.is-active {
-  display: block;
-}
+.semantic-stage { display: none; }
+.semantic-stage.is-active { display: block; }
+.semantic-stage--results { margin-top: 1rem; }
 
 .semantic-step {
   display: grid;
   grid-template-columns: 2.3rem 1fr;
   gap: 0.75rem;
   align-items: start;
-  margin: 0 0 0.85rem;
+  margin: 1.65rem 0 0.75rem;
 }
 
 .semantic-step h2,
@@ -211,10 +192,6 @@
   border-radius: 50%;
   border: 1px solid var(--sq-border);
   font-weight: 700;
-}
-
-.semantic-step__eyebrow {
-  margin: 0 0 0.16rem !important;
 }
 
 .semantic-choice-grid {
@@ -245,7 +222,7 @@
   justify-content: space-between;
   gap: 1rem;
   align-items: end;
-  margin: 0 0 0.75rem;
+  margin: 2rem 0 0.75rem;
 }
 
 .semantic-results {
@@ -301,6 +278,8 @@
   font-size: 0.82rem;
   opacity: 0.72;
 }
+
+.semantic-card__actions { margin: 0.85rem 0 0; }
 
 .semantic-searchbar {
   margin: 1rem 0 1.2rem;
@@ -380,20 +359,101 @@
 .semantic-quality-panel__relations { margin-top: 0.9rem; }
 .semantic-quality-panel__relations a { white-space: nowrap; }
 
-@media (max-width: 1040px) {
-  .semantic-journey {
-    grid-template-columns: repeat(5, minmax(9rem, 1fr));
-    overflow-x: auto;
-    padding-bottom: 0.35rem;
-  }
+.scenario-axis-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.9rem;
+}
 
+.scenario-axis-card {
+  border: 1px solid var(--sq-border);
+  border-radius: 0.7rem;
+  padding: 0.9rem;
+  min-height: 11rem;
+  background: white;
+}
+
+.scenario-axis-card--constrained {
+  border-width: 2px;
+  background: var(--sq-soft);
+}
+
+.scenario-axis-card--open {
+  border-style: dashed;
+}
+
+.scenario-axis-card__heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.scenario-axis-card__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  opacity: 0.72;
+}
+
+.scenario-axis-state {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+
+.scenario-axis-state--constrained { background: currentColor; }
+.scenario-axis-state--open { background: transparent; }
+
+.scenario-axis-card ul {
+  margin: 0.7rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.scenario-axis-card__open {
+  margin: 0.75rem 0 0;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.scenario-axis-card__note {
+  margin: 0.7rem 0 0;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--sq-border);
+  font-size: 0.86rem;
+  line-height: 1.4;
+  opacity: 0.76;
+}
+
+.scenario-space-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 0.8rem 0 1.5rem;
+  font-size: 0.86rem;
+  opacity: 0.72;
+}
+
+.scenario-space-legend span {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+@media (max-width: 980px) {
+  .semantic-journey {
+    grid-template-columns: 1fr;
+  }
   .semantic-journey__connector { display: none; }
+  .scenario-axis-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
   .semantic-facet-layout { grid-template-columns: 1fr; }
-  .semantic-results-head,
-  .semantic-path__heading { align-items: start; }
-  .semantic-path__heading { flex-direction: column; }
-  .semantic-journey__node { grid-template-columns: 1.8rem 1fr; }
+  .semantic-results-head { align-items: start; }
+  .scenario-axis-grid { grid-template-columns: 1fr; }
 }
