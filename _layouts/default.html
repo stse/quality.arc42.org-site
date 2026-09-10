@@ -19,17 +19,8 @@
     <link rel="icon" type="image/png" href="{{ '/assets/img/favicons/favicon-32x32.png' | prepend: site.baseurl }}" sizes="32x32">
     <link rel="icon" type="image/png" href="{{ '/assets/img/favicons/favicon-16x16.png' | prepend: site.baseurl }}" sizes="16x16">
     <link rel="manifest" href="{{ '/assets/img/favicons/manifest.json' | prepend: site.baseurl }}">
-    {%- comment -%} Mobile chrome wears the masthead hue (meta.arc42.org
-        ADR-0008; was #ffffff over a violet band). No mask-icon: Safari ≥12
-        pins tabs with the standard favicon — the pinned-tab SVG (whose
-        #5bbad5 was a favicon-generator default) served Safari 9–11 only. {%- endcomment -%}
     <meta name="theme-color" content="#682d63">
     <meta name="description" content="{{ description }}">
-    {%- comment -%} The legacy `rel="shortcut icon"` line that used to sit
-        here pointed at site.favicon (assets/img/arc42logosquare.webp), so it
-        competed with the favicons above and won in some browsers. The
-        42-circle set plus /favicon.ico is the whole declaration now.
-    {%- endcomment -%}
 
     <link rel="preload" href="{{ '/assets/fonts/atkinson/AtkinsonHyperlegibleNext-Variable.woff2' | prepend: site.baseurl }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ '/assets/fonts/libre-caslon/LibreCaslonText-Regular.woff2' | prepend: site.baseurl }}" as="font" type="font/woff2" crossorigin>
@@ -37,19 +28,12 @@
     <script>
         try {
             document.getElementsByTagName('html')[0].className += ' js';
-        } catch (e) { /* NO-JS */
-        }
+        } catch (e) { /* NO-JS */ }
     </script>
     <link href="{{ '/assets/css/style.css' | prepend: site.baseurl }}" rel="stylesheet">
     {% if jekyll.environment == 'production' %}
-    {%- comment -%} Legacy Plausible script on purpose: the comma-separated
-        data-domain feeds this site's own dashboard AND the rollup.arc42.com
-        journey dashboard — the new per-site snippet cannot do that. Keep all
-        three layouts (default, graph, wcag-report) identical.
-        See meta.arc42.org/plausible-journey-tracking.md {%- endcomment %}
     <script defer data-domain="quality.arc42.org,rollup.arc42.com" src="https://plausible.io/js/script.outbound-links.file-downloads.js"></script>
     {% endif %}
-
 
     {% if page.q-graph %}
     {% include q-graph-config.html %}
@@ -73,7 +57,7 @@
 
 {% include footer.html %}
 
-
+<script defer src="{{ '/assets/js/model-view-switcher.js' | prepend: site.baseurl }}"></script>
 <script defer src="{{ '/assets/js/site.js' | prepend: site.baseurl }}"></script>
 
 </body>
