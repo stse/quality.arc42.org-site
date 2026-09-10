@@ -7,6 +7,7 @@ order: 23
 
 {% assign model = site.data.semantic_quality_model %}
 {% assign scenario_axes = site.data.semantic_scenario_axes %}
+{% assign requirement_spaces = site.data.semantic_requirement_spaces %}
 
 <div class="semantic-explorer semantic-scenario-explorer" id="semantic-scenario-explorer">
   <header class="semantic-explorer__intro">
@@ -45,8 +46,8 @@ order: 23
     <div class="semantic-step__number">2</div>
     <div>
       <p class="semantic-step__eyebrow">Refine the space</p>
-      <h2>Where do you want to go from here?</h2>
-      <p>Choose another semantic constraint or follow a typed relation. A specialization typically constrains an axis that is still open or narrows an already constrained coordinate.</p>
+      <h2>What changes when you follow an edge?</h2>
+      <p>Each typed relation explains its semantic delta: which scenario coordinate is narrowed, shifted, opened, or given another evaluation lens.</p>
     </div>
   </div>
   <div class="semantic-results" id="scenario-space-relations"></div>
@@ -55,8 +56,8 @@ order: 23
     <div class="semantic-step__number">3</div>
     <div>
       <p class="semantic-step__eyebrow">Concrete scenarios</p>
-      <h2>Which existing requirements instantiate this space?</h2>
-      <p>A Requirement turns the family into a concrete scenario by supplying system-specific context, subject, source, measures and thresholds.</p>
+      <h2>How do requirements close the remaining space?</h2>
+      <p>A Requirement instantiates the family by supplying concrete source, subject, context and stimulus details, then turns abstract evaluation preferences into acceptance thresholds.</p>
     </div>
   </div>
   <div class="semantic-results" id="scenario-space-requirements"></div>
@@ -74,4 +75,5 @@ order: 23
 
 <script id="semantic-quality-model" type="application/json">{{ model | jsonify }}</script>
 <script id="semantic-scenario-axes" type="application/json">{{ scenario_axes | jsonify }}</script>
+<script id="semantic-requirement-spaces" type="application/json">{{ requirement_spaces | jsonify }}</script>
 <script defer src="{{ '/assets/js/scenario-space-explorer.js' | prepend: site.baseurl }}"></script>
