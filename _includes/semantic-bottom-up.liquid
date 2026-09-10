@@ -1,0 +1,45 @@
+{% assign semantic_model = site.data.semantic_quality_model %}
+{% assign item_slug = include.page.permalink | split: "/" | last %}
+{% assign item_type = include.type %}
+{% assign matching_semantic_qualities = "" | split: "" %}
+
+{% for pair in semantic_model.qualities %}
+  {% assign quality_id = pair[0] %}
+  {% assign quality = pair[1] %}
+  {% if item_type == "requirement" and quality.requirements contains item_slug %}
+    {% assign matching_semantic_qualities = matching_semantic_qualities | push: quality_id %}
+  {% elsif item_type == "approach" and quality.approaches contains item_slug %}
+    {% assign matching_semantic_qualities = matching_semantic_qualities | push: quality_id %}
+  {% endif %}
+{% endfor %}
+
+{% if matching_semantic_qualities.size > 0 %}
+<section class="semantic-quality-panel" aria-label="Semantic quality navigation">
+  <div class="semantic-quality-panel__heading">
+    <h2>Explore the quality intent</h2>
+    <a href="{{ '/explore-quality/' | prepend: site.baseurl }}">Open semantic explorer →</a>
+  </div>
+  <p>
+    {% if item_type == "requirement" %}
+      This requirement provides a bottom-up entry into the following quality concepts in the prototype model.
+    {% else %}
+      This approach supports the following quality concepts in the prototype model. The link expresses quality intent, not equivalence between an approach and a quality.
+    {% endif %}
+  </p>
+  <div class="semantic-results">
+    {% for quality_id in matching_semantic_qualities %}
+      {% assign quality = semantic_model.qualities[quality_id] %}
+      <article class="semantic-card semantic-card--{{ quality.kind }}">
+        <div class="semantic-card__topline">
+          <span class="semantic-card__kind">{% if quality.kind == "characteristic" %}Characteristic{% else %}Quality concept{% endif %}</span>
+        </div>
+        <h3>{% if quality.page %}<a href="{{ quality.page | prepend: site.baseurl }}">{{ quality.title }}</a>{% else %}{{ quality.title }}{% endif %}</h3>
+        <p class="semantic-card__question">{{ quality.question }}</p>
+        <div class="semantic-card__dimensions">
+          {% for dimension in quality.dimensions %}<span>#{{ dimension }}</span>{% endfor %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
