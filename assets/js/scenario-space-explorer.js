@@ -149,10 +149,15 @@
       const rv = new Set(list(req[axis]?.values));
       if (rv.size && !composed.values.some((v) => rv.has(v))) return false;
     }
-    const evalAxis = composedAxis("evaluation");
-    if (!evalAxis.values.length) return true;
+
+    // A requirement instantiating an intersection must satisfy the evaluation
+    // family of every member, not merely one measure from their union.
     const measured = new Set(list(req.acceptance).map((a) => a.measure).filter(Boolean));
-    return evalAxis.values.some((v) => measured.has(v));
+    for (const q of qualities) {
+      const family = list(spaceFor(q.id)?.evaluation?.values);
+      if (family.length && !family.some((measure) => measured.has(measure))) return false;
+    }
+    return true;
   }
 
   function renderRequirementClosure(req) {
@@ -163,7 +168,7 @@
 
   const reqEntries = Object.entries(requirementSpaces.requirements || {}).filter(([,req]) => requirementFits(req));
   byId("scenario-space-requirement-description").textContent = isComposite
-    ? "Requirements below are tested against the composed scenario constraints. An unnamed intersection can therefore be inspected like any named concept."
+    ? "Requirements below are tested against every member of the composed quality objective. An unnamed intersection can therefore be inspected like any named concept."
     : "A Requirement turns the family into a concrete scenario by supplying system-specific context, subject, source, measures and thresholds.";
   byId("scenario-space-requirements").innerHTML = reqEntries.map(([,req]) => `<article class="semantic-card semantic-card--requirement"><div class="semantic-card__topline"><span class="semantic-card__kind">Requirement</span></div><h3><a href="${esc(req.page)}">${esc(req.title)}</a></h3>${renderRequirementClosure(req)}<p class="semantic-card__actions"><a href="${esc(req.page)}">Open concrete scenario →</a></p></article>`).join("") || `<article class="semantic-card"><p>No modeled requirement currently instantiates this composed space. That empty intersection is itself useful information.</p></article>`;
 
