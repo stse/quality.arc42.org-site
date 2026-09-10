@@ -1,0 +1,161 @@
+version: "0.1-prototype"
+status: prototype
+scope: >-
+  Additional scenario-space axes used to show which coordinates a quality
+  concept constrains and which remain intentionally open. Open does not mean
+  unknown; it means the quality concept applies across that coordinate and a
+  concrete requirement may constrain it later.
+
+sources:
+  stakeholder:
+    label: Stakeholder
+  business:
+    label: Business / domain
+  maintainer:
+    label: Maintainer / developer
+  operator:
+    label: Operator
+  user:
+    label: User
+  environment:
+    label: Environment
+  external-system:
+    label: External system
+  malicious-actor:
+    label: Malicious actor
+  fault-source:
+    label: Fault / disturbance source
+
+subjects:
+  system-or-architecture:
+    label: System / architecture
+  component:
+    label: Component / module
+  persistent-information:
+    label: Persistent information
+  configuration:
+    label: Configuration
+  interface:
+    label: Interface / integration boundary
+  deployment:
+    label: Deployment / infrastructure
+  service:
+    label: Running service
+
+contexts:
+  development:
+    label: Development / change
+  runtime:
+    label: Runtime
+  deployment:
+    label: Deployment / transition
+  degraded:
+    label: Degraded / failure conditions
+  hostile:
+    label: Hostile conditions
+  resource-constrained:
+    label: Resource-constrained
+  unresolved-knowledge:
+    label: Relevant knowledge unresolved
+  lifecycle:
+    label: Lifecycle transition
+  regulatory:
+    label: Regulatory constraint
+
+quality_spaces:
+  evolvability:
+    source:
+      mode: open
+      note: "The need for change may originate from business, technology, regulation, maintainers, users, or the environment. Evolvability does not depend on one source."
+    subject:
+      mode: constrained
+      values: [system-or-architecture]
+      note: "The quality objective concerns the system or architecture being changed; a requirement may narrow this to a component, data model, interface, or other artifact."
+    context:
+      mode: open
+      note: "Evolvability applies across many change contexts. A concrete requirement should state the relevant lifecycle, organizational, regulatory, or technical context."
+    stimulus:
+      mode: constrained
+      values: [change]
+    response:
+      mode: constrained
+      values: [accommodate-change]
+    evaluation:
+      mode: constrained
+      values: [change-effort, affected-scope, regression-risk]
+
+  extensibility:
+    source:
+      mode: open
+    subject:
+      mode: constrained
+      values: [system-or-architecture]
+    context:
+      mode: open
+    stimulus:
+      mode: constrained
+      values: [change]
+      note: "This specialization narrows the change to adding capability."
+    response:
+      mode: constrained
+      values: [accommodate-change]
+    evaluation:
+      mode: constrained
+      values: [change-effort, affected-scope]
+
+  replaceability:
+    source:
+      mode: open
+    subject:
+      mode: constrained
+      values: [component]
+    context:
+      mode: open
+    stimulus:
+      mode: constrained
+      values: [change]
+      note: "The relevant change replaces an existing system element while preserving its required role."
+    response:
+      mode: constrained
+      values: [accommodate-change]
+    evaluation:
+      mode: constrained
+      values: [change-effort, affected-scope]
+
+  agility:
+    source:
+      mode: open
+    subject:
+      mode: open
+      note: "Agility can qualify changes to different subjects; it contributes an evaluation lens rather than a single artifact scope."
+    context:
+      mode: open
+    stimulus:
+      mode: constrained
+      values: [change, context-change, anticipated-variation, demand-change, environment-transfer]
+    response:
+      mode: open
+      note: "The response depends on the underlying change characteristic being qualified by agility."
+    evaluation:
+      mode: constrained
+      values: [elapsed-time]
+
+  optionality:
+    source:
+      mode: open
+    subject:
+      mode: open
+      note: "Optionality can concern architecture, technology, providers, persistent information, policy, or other decision subjects."
+    context:
+      mode: constrained
+      values: [unresolved-knowledge]
+    stimulus:
+      mode: constrained
+      values: [unresolved-knowledge]
+      note: "A commitment becomes relevant while information needed to justify that commitment is unresolved."
+    response:
+      mode: constrained
+      values: [keep-open]
+    evaluation:
+      mode: constrained
+      values: [viable-alternatives, irreversible-commitment, information-loss]
