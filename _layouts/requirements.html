@@ -12,15 +12,12 @@ layout: default
                         block to a primary navigation handle, plus the tag
                         chip as a quiet aside
     3. Content          Context / Trigger / Acceptance Criteria
-    4. Top 8 siblings   ranked by score = (related-overlap × 5) + tag-overlap,
+    4. Semantic path    prototype bottom-up navigation into quality concepts
+    5. Top 8 siblings   ranked by score = (related-overlap × 5) + tag-overlap,
                         with per-row rationale ("shares N qualities" or
                         "via #tag" when only the dimension matches)
-    5. View all link    escape hatch to /tag-<primary-tag>/
-    6. Return link      ← All requirements
-
-  Replaces the previous flat-list "Directly Related Quality Requirements"
-  wall (40+ items on a typical page) and the footer-style "Related
-  Qualities" block.
+    6. View all link    escape hatch to /tag-<primary-tag>/
+    7. Return link      ← All requirements
 {%- endcomment -%}
 
 {%- comment -%} 1. Resolve "Implements" qualities {%- endcomment -%}
@@ -35,14 +32,7 @@ layout: default
   {%- endfor -%}
 {%- endfor -%}
 
-{%- comment -%}
-  2. Score and rank sibling requirements.
-  Liquid does not ship an `intersection` filter (the old layout used it and
-  silently no-op'd — every non-empty-tagged requirement matched). We hand-roll
-  the intersection with `contains` instead, which works for arrays in Liquid.
-{%- endcomment -%}
 {%- assign scored = "" | split: "" -%}
-
 {%- for req in site.requirements -%}
   {%- if req.permalink == page.permalink -%}{%- continue -%}{%- endif -%}
 
@@ -66,7 +56,6 @@ layout: default
 
   {%- assign score = rel_overlap | times: 5 | plus: tag_overlap -%}
   {%- if score > 0 -%}
-    {%- comment -%} Pad score for lexical-sort stability (max ~50 fits in 4 digits) {%- endcomment -%}
     {%- assign score_str = score | prepend: "0000" -%}
     {%- assign score_str = score_str | slice: -4, 4 -%}
     {%- capture entry -%}{{ score_str }}|{{ rel_overlap }}|{{ tag_overlap }}|{{ req.permalink }}{%- endcapture -%}
@@ -75,9 +64,6 @@ layout: default
 {%- endfor -%}
 
 {%- assign top_entries = scored | sort | reverse | slice: 0, 8 -%}
-
-{%- comment -%} 3. Count total requirements in the primary tag for the
-     "View all N in #tag" link {%- endcomment -%}
 {%- assign primary_tag = page.tags | first -%}
 {%- assign tag_total = 0 -%}
 {%- if primary_tag -%}
@@ -90,17 +76,12 @@ layout: default
 
 <div class="article-wrapper">
   <article class="req-detail">
-
-    {%- comment -%} 1. Hero card — unified section-hero with eyebrow "Requirement"
-         linking back to /requirements/. Replaces the bare <h1> that was being
-         overridden by the global .site-content h1 rule (0,1,1 beat 0,1,0). {%- endcomment -%}
     {% include section-hero.liquid
       section="requirements"
       title=page.title
       eyebrow_label="Requirement"
       eyebrow_href="/requirements/" %}
 
-    {%- comment -%} 3. Implements line {%- endcomment -%}
     {%- if implements_qualities.size > 0 or page.tags.size > 0 -%}
       <p class="req-detail__implements">
         {%- if implements_qualities.size > 0 -%}
@@ -118,7 +99,6 @@ layout: default
       </p>
     {%- endif -%}
 
-    {%- comment -%} 4. Content {%- endcomment -%}
     <section class="post-content">
       <div class="quality-requirement">{{ content }}</div>
       {% if page.note %}
@@ -135,7 +115,8 @@ layout: default
       {% endif %}
     </section>
 
-    {%- comment -%} 5. Top 8 siblings ranked by overlap {%- endcomment -%}
+    {% include semantic-bottom-up.liquid page=page type="requirement" %}
+
     {%- if top_entries.size > 0 -%}
     <section class="req-detail__siblings">
       <h2 class="req-detail__siblings-heading">
@@ -171,7 +152,6 @@ layout: default
     </section>
     {%- endif -%}
 
-    {%- comment -%} 6. Return link {%- endcomment -%}
     <p class="req-detail__return">
       <a href="{{ '/requirements/' | prepend: site.baseurl }}">← All requirements</a>
     </p>
