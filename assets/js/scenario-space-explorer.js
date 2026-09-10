@@ -1,9 +1,11 @@
 (() => {
   const root = document.getElementById("semantic-scenario-explorer");
   const modelNode = document.getElementById("semantic-quality-model");
-  if (!root || !modelNode) return;
+  const axesNode = document.getElementById("semantic-scenario-axes");
+  if (!root || !modelNode || !axesNode) return;
 
   const model = JSON.parse(modelNode.textContent || "{}");
+  const scenarioAxes = JSON.parse(axesNode.textContent || "{}");
   const params = new URLSearchParams(window.location.search);
   const qualityId = params.get("quality") || "evolvability";
   const quality = model.qualities?.[qualityId];
@@ -27,17 +29,51 @@
     return list(ids).map((id) => collection?.[id]?.label || fallback?.(id) || id);
   }
 
-  const defined = byId("scenario-space-defined");
-  const cells = [
-    ["Situation / stimulus", labels(quality.stimuli, model.stimuli)],
-    ["Desired response", labels(quality.responses, model.responses)],
-    ["Evaluation", list(quality.measures).map((id) => {
-      const m = model.measures?.[id] || {};
-      return `${m.label || id}${m.preference ? ` (${m.preference})` : ""}`;
-    })],
-    ["Q42 perspectives", labels(quality.dimensions, model.dimensions, (id) => id)],
-  ];
-  defined.innerHTML = cells.map(([title, items]) => `<div class="semantic-quality-panel__cell"><strong>${title}</strong><ul>${items.map((i) => `<li>${i}</li>`).join("") || "<li>Open / not constrained</li>"}</ul></div>`).join("");
+  function renderAxisCard(axisName, axisConfig) {
+    const mode = axisConfig?.mode || "open";
+    const values = list(axisConfig?.values);
+    let items = [];
+    if (axisName === "source") items = labels(values, scenarioAxes.sources);
+    if (axisName === "subject") items = labels(values, scenarioAxes.subjects);
+    if (axisName === "context") items = labels(values, scenarioAxes.contexts);
+    if (axisName === "stimulus") items = labels(values, model.stimuli);
+    if (axisName === "response") items = labels(values, model.responses);
+    if (axisName === "evaluation") {
+      items = values.map((id) => {
+        const m = model.measures?.[id] || {};
+        return `${m.label || id}${m.preference ? ` (${m.preference})` : ""}`;
+      });
+    }
+
+    const titles = {
+      source: "Source",
+      subject: "Subject / system",
+      context: "Context",
+      stimulus: "Stimulus",
+      response: "Desired response",
+      evaluation: "Evaluation",
+    };
+
+    const stateLabel = mode === "constrained" ? "Constrained" : "Open";
+    const body = mode === "constrained"
+      ? `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`
+      : `<p class="scenario-axis-card__open">Not constrained by ${quality.title}.</p>`;
+    const note = axisConfig?.note ? `<p class="scenario-axis-card__note">${axisConfig.note}</p>` : "";
+
+    return `<article class="scenario-axis-card scenario-axis-card--${mode}">
+      <div class="scenario-axis-card__heading">
+        <strong>${titles[axisName] || axisName}</strong>
+        <span class="scenario-axis-card__state"><i class="scenario-axis-state scenario-axis-state--${mode}"></i>${stateLabel}</span>
+      </div>
+      ${body}
+      ${note}
+    </article>`;
+  }
+
+  const axisSpace = scenarioAxes.quality_spaces?.[qualityId] || {};
+  const axes = ["source", "subject", "context", "stimulus", "response", "evaluation"];
+  const axisContainer = byId("scenario-space-axes");
+  axisContainer.innerHTML = axes.map((axis) => renderAxisCard(axis, axisSpace[axis] || { mode: "open" })).join("");
 
   function relationCard(relation) {
     const target = model.qualities?.[relation.target];
