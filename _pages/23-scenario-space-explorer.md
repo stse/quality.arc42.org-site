@@ -6,6 +6,7 @@ order: 23
 ---
 
 {% assign model = site.data.semantic_quality_model %}
+{% assign scenario_axes = site.data.semantic_scenario_axes %}
 
 <div class="semantic-explorer semantic-scenario-explorer" id="semantic-scenario-explorer">
   <header class="semantic-explorer__intro">
@@ -29,18 +30,23 @@ order: 23
     <div class="semantic-step__number">1</div>
     <div>
       <p class="semantic-step__eyebrow">Defined by this characteristic</p>
-      <h2>Which part of scenario space is already constrained?</h2>
-      <p>A Characteristic is an entry point into a recurring family of scenarios. These coordinates define its current semantic boundary.</p>
+      <h2>Which coordinates of scenario space are constrained?</h2>
+      <p>A Characteristic defines a recurring family of scenarios by constraining some coordinates while intentionally leaving others open for later specialization or concrete requirements.</p>
     </div>
   </div>
-  <div class="semantic-quality-panel__grid" id="scenario-space-defined"></div>
+  <div class="scenario-axis-grid" id="scenario-space-axes"></div>
+
+  <div class="scenario-space-legend" aria-label="Scenario space legend">
+    <span><i class="scenario-axis-state scenario-axis-state--constrained"></i> Constrained by the quality concept</span>
+    <span><i class="scenario-axis-state scenario-axis-state--open"></i> Open across this characteristic</span>
+  </div>
 
   <div class="semantic-step">
     <div class="semantic-step__number">2</div>
     <div>
       <p class="semantic-step__eyebrow">Refine the space</p>
       <h2>Where do you want to go from here?</h2>
-      <p>Choose another semantic constraint or follow a typed relation. This narrows, intersects, or shifts the scenario family rather than ending at the term definition.</p>
+      <p>Choose another semantic constraint or follow a typed relation. A specialization typically constrains an axis that is still open or narrows an already constrained coordinate.</p>
     </div>
   </div>
   <div class="semantic-results" id="scenario-space-relations"></div>
@@ -50,7 +56,7 @@ order: 23
     <div>
       <p class="semantic-step__eyebrow">Concrete scenarios</p>
       <h2>Which existing requirements instantiate this space?</h2>
-      <p>Requirements provide bottom-up evidence for the scenario family and concrete acceptance criteria.</p>
+      <p>A Requirement turns the family into a concrete scenario by supplying system-specific context, subject, source, measures and thresholds.</p>
     </div>
   </div>
   <div class="semantic-results" id="scenario-space-requirements"></div>
@@ -67,4 +73,5 @@ order: 23
 </div>
 
 <script id="semantic-quality-model" type="application/json">{{ model | jsonify }}</script>
+<script id="semantic-scenario-axes" type="application/json">{{ scenario_axes | jsonify }}</script>
 <script defer src="{{ '/assets/js/scenario-space-explorer.js' | prepend: site.baseurl }}"></script>
