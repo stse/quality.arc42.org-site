@@ -15,7 +15,9 @@
 }
 
 .semantic-explorer__eyebrow,
-.semantic-card__kind {
+.semantic-card__kind,
+.semantic-step__eyebrow,
+.semantic-path__eyebrow {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -34,7 +36,9 @@
 
 .semantic-mode,
 .semantic-reset,
-.semantic-choice {
+.semantic-choice,
+.semantic-journey__node,
+.semantic-path__chip {
   font: inherit;
   color: inherit;
   background: transparent;
@@ -57,12 +61,134 @@
 .semantic-view { display: none; }
 .semantic-view.is-active { display: block; }
 
+.semantic-journey {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: stretch;
+  margin: 0.3rem 0 1rem;
+}
+
+.semantic-journey__node {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.55rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.7rem;
+  text-align: left;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.semantic-journey__node:hover {
+  background: var(--sq-soft);
+}
+
+.semantic-journey__node.is-active {
+  border-color: currentColor;
+  background: var(--sq-strong);
+  transform: translateY(-1px);
+}
+
+.semantic-journey__node.is-complete .semantic-journey__number::after {
+  content: "✓";
+  font-size: 0.72rem;
+  margin-left: 0.16rem;
+}
+
+.semantic-journey__number {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  border: 1px solid var(--sq-border);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.semantic-journey__node strong,
+.semantic-journey__node small {
+  display: block;
+}
+
+.semantic-journey__node small {
+  margin-top: 0.12rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  opacity: 0.68;
+}
+
+.semantic-journey__connector {
+  align-self: center;
+  font-size: 1.05rem;
+  opacity: 0.4;
+}
+
+.semantic-path {
+  margin: 0 0 1.1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--sq-border);
+  border-radius: 0.7rem;
+  background: var(--sq-soft);
+}
+
+.semantic-path__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.semantic-path__heading strong {
+  display: block;
+  margin-top: 0.12rem;
+}
+
+.semantic-path__trail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.semantic-path__chip {
+  padding: 0.3rem 0.55rem;
+  font-size: 0.83rem;
+  background: rgba(127, 127, 127, 0.07);
+}
+
+.semantic-path__chip:hover {
+  background: var(--sq-strong);
+}
+
+.semantic-path__arrow,
+.semantic-path__empty {
+  opacity: 0.58;
+  font-size: 0.82rem;
+}
+
+.semantic-stage,
+.semantic-stage--results {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--sq-border);
+  border-radius: 0.75rem;
+}
+
+.semantic-stage.is-active,
+.semantic-stage--results.is-active {
+  display: block;
+}
+
 .semantic-step {
   display: grid;
   grid-template-columns: 2.3rem 1fr;
   gap: 0.75rem;
   align-items: start;
-  margin: 1.65rem 0 0.75rem;
+  margin: 0 0 0.85rem;
 }
 
 .semantic-step h2,
@@ -85,6 +211,10 @@
   border-radius: 50%;
   border: 1px solid var(--sq-border);
   font-weight: 700;
+}
+
+.semantic-step__eyebrow {
+  margin: 0 0 0.16rem !important;
 }
 
 .semantic-choice-grid {
@@ -115,7 +245,7 @@
   justify-content: space-between;
   gap: 1rem;
   align-items: end;
-  margin: 2rem 0 0.75rem;
+  margin: 0 0 0.75rem;
 }
 
 .semantic-results {
@@ -250,7 +380,20 @@
 .semantic-quality-panel__relations { margin-top: 0.9rem; }
 .semantic-quality-panel__relations a { white-space: nowrap; }
 
+@media (max-width: 1040px) {
+  .semantic-journey {
+    grid-template-columns: repeat(5, minmax(9rem, 1fr));
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+  }
+
+  .semantic-journey__connector { display: none; }
+}
+
 @media (max-width: 760px) {
   .semantic-facet-layout { grid-template-columns: 1fr; }
-  .semantic-results-head { align-items: start; }
+  .semantic-results-head,
+  .semantic-path__heading { align-items: start; }
+  .semantic-path__heading { flex-direction: column; }
+  .semantic-journey__node { grid-template-columns: 1.8rem 1fr; }
 }
