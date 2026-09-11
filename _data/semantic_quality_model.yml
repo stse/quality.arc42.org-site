@@ -1,0 +1,459 @@
+version: "0.1-prototype"
+status: prototype
+scope: >-
+  Experimental semantic layer for Q42. It does not replace existing tags or
+  related links; it makes a selected part of the quality graph explicit enough
+  to support typed relations and question-driven navigation.
+
+# Dimensions remain broad, overlapping stakeholder entry perspectives.
+dimensions:
+  flexible:
+    label: Flexible
+    question: "Does the system preserve, enable, or reach relevant viable alternatives under variation, change, and uncertainty?"
+  maintainable:
+    label: Maintainable
+    question: "Can intended maintainers understand, change, and verify the system effectively and efficiently?"
+  efficient:
+    label: Efficient
+    question: "Does the system achieve required outcomes with appropriate expenditure of time and resources?"
+  operable:
+    label: Operable
+    question: "Can intended operators observe, control, and manage the system throughout its operational lifecycle?"
+  reliable:
+    label: Reliable
+    question: "Does the system preserve or restore required service under faults and disturbances?"
+  secure:
+    label: Secure
+    question: "Does the system protect assets and authorized behavior against unauthorized or malicious action?"
+  safe:
+    label: Safe
+    question: "Does the system avoid or limit unacceptable harm?"
+  usable:
+    label: Usable
+    question: "Can intended users achieve their goals appropriately?"
+  suitable:
+    label: Suitable
+    question: "Does the system provide what is needed in its intended context?"
+
+stimuli:
+  change:
+    label: Relevant change
+    question: "Does something about the required system need to change?"
+  unresolved-knowledge:
+    label: Unresolved knowledge
+    question: "Must a commitment be made while relevant knowledge is still unresolved?"
+  context-change:
+    label: Context change
+    question: "Does the context of use or operation vary?"
+  environment-transfer:
+    label: Environment transfer
+    question: "Must the product, configuration, or data move to another execution environment?"
+  anticipated-variation:
+    label: Anticipated variation
+    question: "Must the product realize a variant that was deliberately anticipated?"
+  demand-change:
+    label: Quantitative demand change
+    question: "Does the quantity of demand for existing capabilities change?"
+  integration-need:
+    label: Integration need
+    question: "Must useful interaction with another system or component be established?"
+  undesirable-prior-change:
+    label: Undesirable prior change
+    question: "Has a previous action or change become undesirable and need to be undone?"
+  adverse-local-event:
+    label: Adverse local event
+    question: "Can a local adverse event propagate beyond its origin?"
+  retirement:
+    label: Lifecycle retirement
+    question: "Must the system or service be retired and removed?"
+
+responses:
+  accommodate-change:
+    label: Accommodate change
+    question: "Should the required changed state be reachable without disproportionate impact?"
+  keep-open:
+    label: Preserve alternatives
+    question: "Should relevant alternatives remain viable instead of being fixed prematurely?"
+  remain-suitable:
+    label: Remain suitable
+    question: "Should the product remain suitable as its context changes?"
+  transfer:
+    label: Transfer
+    question: "Should the product, configuration, and data be transferable to another environment?"
+  realize-variant:
+    label: Realize anticipated variant
+    question: "Should an anticipated variant be realizable without modifying the implementation?"
+  accommodate-demand:
+    label: Accommodate demand
+    question: "Should existing capabilities continue to work across changing demand levels?"
+  establish-integration:
+    label: Establish integration
+    question: "Should working interaction with another system be establishable with limited effort and change?"
+  restore:
+    label: Restore prior acceptable state
+    question: "Should an undesirable change be undoable with limited loss and disruption?"
+  contain:
+    label: Contain impact
+    question: "Should adverse effects remain limited to a bounded scope?"
+  remove:
+    label: Retire cleanly
+    question: "Should the system be removable without residual dependencies, access, or unmanaged data?"
+
+measures:
+  elapsed-time:
+    label: Elapsed time
+    preference: minimize
+  change-effort:
+    label: Change effort
+    preference: minimize
+  affected-scope:
+    label: Affected scope
+    preference: minimize
+  regression-risk:
+    label: Regression risk
+    preference: minimize
+  viable-alternatives:
+    label: Viable alternatives preserved
+    preference: maximize
+  irreversible-commitment:
+    label: Irreversible commitment
+    preference: minimize
+  information-loss:
+    label: Information loss
+    preference: minimize
+  supported-context-range:
+    label: Supported context range
+    preference: maximize
+  transfer-effort:
+    label: Transfer effort
+    preference: minimize
+  supported-variation-range:
+    label: Supported variation range
+    preference: maximize
+  supported-demand:
+    label: Supported demand range
+    preference: maximize
+  integration-effort:
+    label: Integration effort
+    preference: minimize
+  custom-integration-work:
+    label: Custom integration work
+    preference: minimize
+  rollback-loss:
+    label: Loss during rollback
+    preference: minimize
+  residual-impact:
+    label: Residual propagated impact
+    preference: minimize
+  residual-dependencies:
+    label: Residual dependencies after retirement
+    preference: minimize
+
+# `kind: characteristic` means a useful architectural entry question.
+# `kind: concept` means a useful named specialization/composition that should
+# remain searchable without necessarily being a primary navigation anchor.
+qualities:
+  evolvability:
+    title: Evolvability
+    kind: characteristic
+    status: existing
+    page: /qualities/evolvability
+    question: "How well can the system accommodate change over its lifetime?"
+    dimensions: [flexible, maintainable]
+    stimuli: [change]
+    responses: [accommodate-change]
+    measures: [change-effort, affected-scope, regression-risk]
+    relations:
+      - { type: specialized-by, target: extensibility }
+      - { type: specialized-by, target: replaceability }
+      - { type: overlaps, target: agility }
+      - { type: overlaps, target: optionality }
+    requirements:
+      - adding-entity-type-within-5-days
+      - efficient-change-business-rules
+      - reinterpret-domain-concept-from-historical-facts
+    approaches:
+      - preserve-facts-derive-interpretations
+      - defer-binding
+      - plugin-architecture
+
+  adaptability:
+    title: Adaptability
+    kind: characteristic
+    status: existing
+    page: /qualities/adaptability
+    question: "How well can the product remain suitable under different or changing contexts of use and operation?"
+    dimensions: [flexible, usable, suitable]
+    stimuli: [context-change]
+    responses: [remain-suitable]
+    measures: [supported-context-range, change-effort]
+    relations:
+      - { type: overlaps, target: configurability }
+      - { type: overlaps, target: agility }
+
+  portability:
+    title: Portability
+    kind: characteristic
+    status: existing
+    page: /qualities/portability
+    question: "How well can the product, including required configuration and data, be transferred between execution environments?"
+    dimensions: [flexible, operable]
+    stimuli: [environment-transfer]
+    responses: [transfer]
+    measures: [transfer-effort, elapsed-time]
+    relations:
+      - { type: overlaps, target: agility }
+      - { type: overlaps, target: reversibility }
+    requirements:
+      - portable-data-checker
+      - easily-change-cloud-provider
+
+  configurability:
+    title: Configurability
+    kind: characteristic
+    status: existing
+    page: /qualities/configurability
+    question: "How well can the product realize anticipated variants without modifying its implementation?"
+    dimensions: [flexible, operable, usable]
+    stimuli: [anticipated-variation]
+    responses: [realize-variant]
+    measures: [supported-variation-range, change-effort]
+    relations:
+      - { type: overlaps, target: adaptability }
+      - { type: overlaps, target: agility }
+      - { type: specialized-by, target: themability }
+    requirements:
+      - configurable-gui-theme
+    approaches:
+      - feature-toggles
+      - externalized-business-rules
+
+  scalability:
+    title: Scalability
+    kind: characteristic
+    status: existing
+    page: /qualities/scalability
+    question: "How well can the system accommodate quantitative changes in demand for its existing capabilities?"
+    dimensions: [flexible, efficient, reliable]
+    stimuli: [demand-change]
+    responses: [accommodate-demand]
+    measures: [supported-demand, elapsed-time]
+    relations:
+      - { type: specialized-by, target: elasticity }
+      - { type: overlaps, target: agility }
+
+  agility:
+    title: Agility
+    kind: characteristic
+    status: existing-reframed
+    page: /qualities/agility
+    question: "How quickly can the system accommodate a relevant change?"
+    dimensions: [flexible, maintainable, efficient]
+    stimuli: [change, context-change, anticipated-variation, demand-change, environment-transfer]
+    responses: [accommodate-change, remain-suitable, realize-variant, accommodate-demand, transfer]
+    measures: [elapsed-time]
+    relations:
+      - { type: overlaps, target: evolvability }
+      - { type: overlaps, target: adaptability }
+      - { type: overlaps, target: portability }
+      - { type: overlaps, target: configurability }
+      - { type: overlaps, target: scalability }
+    requirements:
+      - efficient-change-business-rules
+
+  integrability:
+    title: Integrability
+    kind: characteristic
+    status: existing-reframed
+    page: /qualities/integrability
+    question: "How easily can working interaction with another system or component be established?"
+    dimensions: [flexible, operable, maintainable]
+    stimuli: [integration-need]
+    responses: [establish-integration]
+    measures: [integration-effort, elapsed-time, custom-integration-work]
+    relations:
+      - { type: overlaps, target: evolvability }
+      - { type: overlaps, target: agility }
+    requirements:
+      - compatible-with-5-battery-providers
+      - crm-data-synchronization
+    approaches:
+      - consumer-driven-contracts
+      - open-host-service
+
+  optionality:
+    title: Optionality
+    kind: characteristic
+    status: proposed
+    question: "Which relevant options does the architecture preserve, enable, or foreclose when decisions cannot or should not yet be fixed?"
+    dimensions: [flexible, maintainable]
+    stimuli: [unresolved-knowledge]
+    responses: [keep-open]
+    measures: [viable-alternatives, irreversible-commitment, information-loss]
+    relations:
+      - { type: overlaps, target: evolvability }
+      - { type: specialized-by, target: business-uncertainty-tolerance }
+      - { type: complements, target: reversibility }
+    requirements:
+      - capture-unresolved-business-semantics-without-structural-commitment
+      - reinterpret-domain-concept-from-historical-facts
+    approaches:
+      - preserve-facts-derive-interpretations
+      - defer-binding
+
+  reversibility:
+    title: Reversibility
+    kind: characteristic
+    status: proposed
+    question: "How well can an undesirable decision or change be undone?"
+    dimensions: [flexible, maintainable, operable]
+    stimuli: [undesirable-prior-change]
+    responses: [restore]
+    measures: [elapsed-time, rollback-loss, affected-scope]
+    relations:
+      - { type: complements, target: optionality }
+      - { type: overlaps, target: portability }
+      - { type: overlaps, target: evolvability }
+
+  impact-containment:
+    title: Impact Containment
+    kind: characteristic
+    status: proposed
+    question: "If something goes wrong locally, how much else can it affect?"
+    dimensions: [reliable, secure, safe, maintainable]
+    stimuli: [adverse-local-event]
+    responses: [contain]
+    measures: [affected-scope, residual-impact]
+
+  decommissionability:
+    title: Decommissionability
+    kind: characteristic
+    status: proposed
+    question: "How safely and completely can the system cease to exist?"
+    dimensions: [operable, secure]
+    stimuli: [retirement]
+    responses: [remove]
+    measures: [elapsed-time, residual-dependencies, information-loss]
+
+  business-uncertainty-tolerance:
+    title: Business Uncertainty Tolerance
+    kind: concept
+    status: proposed-specialization
+    question: "How well can unresolved business semantics remain unresolved without destroying information or forcing premature structural commitments?"
+    dimensions: [flexible, maintainable]
+    stimuli: [unresolved-knowledge]
+    responses: [keep-open]
+    measures: [viable-alternatives, irreversible-commitment, information-loss]
+    relations:
+      - { type: specializes, target: optionality }
+    requirements:
+      - capture-unresolved-business-semantics-without-structural-commitment
+      - reinterpret-domain-concept-from-historical-facts
+    approaches:
+      - preserve-facts-derive-interpretations
+
+  extensibility:
+    title: Extensibility
+    kind: concept
+    status: existing-specialization
+    page: /qualities/extensibility
+    question: "How well can new capabilities be added?"
+    dimensions: [flexible, maintainable]
+    stimuli: [change]
+    responses: [accommodate-change]
+    measures: [change-effort, affected-scope]
+    relations:
+      - { type: specializes, target: evolvability }
+
+  replaceability:
+    title: Replaceability
+    kind: concept
+    status: existing-specialization
+    page: /qualities/replaceability
+    question: "How well can a system element be replaced while preserving its required role?"
+    dimensions: [flexible, maintainable, operable]
+    stimuli: [change]
+    responses: [accommodate-change]
+    measures: [change-effort, affected-scope]
+    relations:
+      - { type: specializes, target: evolvability }
+      - { type: overlaps, target: reversibility }
+
+  elasticity:
+    title: Elasticity
+    kind: concept
+    status: existing-specialization
+    page: /qualities/elasticity
+    question: "How well can capacity be adjusted dynamically as demand changes?"
+    dimensions: [flexible, efficient, reliable]
+    stimuli: [demand-change]
+    responses: [accommodate-demand]
+    measures: [elapsed-time, supported-demand]
+    relations:
+      - { type: specializes, target: scalability }
+      - { type: overlaps, target: agility }
+
+  themability:
+    title: Themability
+    kind: concept
+    status: existing-specialization
+    page: /qualities/themability
+    question: "How well can anticipated visual presentation variants be selected?"
+    dimensions: [flexible, usable]
+    stimuli: [anticipated-variation]
+    responses: [realize-variant]
+    measures: [change-effort, supported-variation-range]
+    relations:
+      - { type: specializes, target: configurability }
+
+requirements:
+  adding-entity-type-within-5-days:
+    title: "Adding a new entity type within 5 days and ≤ 3 modules"
+    page: /requirements/adding-entity-type-within-5-days
+  efficient-change-business-rules:
+    title: Efficient change of business rules
+    page: /requirements/efficient-change-business-rules
+  reinterpret-domain-concept-from-historical-facts:
+    title: Reinterpret domain concept from historical facts
+    page: /requirements/reinterpret-domain-concept-from-historical-facts
+  capture-unresolved-business-semantics-without-structural-commitment:
+    title: Capture unresolved business semantics without structural commitment
+    page: /requirements/capture-unresolved-business-semantics-without-structural-commitment
+  portable-data-checker:
+    title: Portable Business Data Checker
+    page: /requirements/portable-data-checker
+  easily-change-cloud-provider:
+    title: Easily change cloud provider
+    page: /requirements/easily-change-cloud-provider
+  configurable-gui-theme:
+    title: Configurable GUI theme
+    page: /requirements/configurable-gui-theme
+  compatible-with-5-battery-providers:
+    title: Compatible with 5 battery providers
+    page: /requirements/compatible-with-5-battery-providers
+  crm-data-synchronization:
+    title: CRM System Data Synchronization
+    page: /requirements/crm-data-synchronization
+
+approaches:
+  preserve-facts-derive-interpretations:
+    title: Preserve Facts, Derive Interpretations
+    page: /approaches/preserve-facts-derive-interpretations
+  defer-binding:
+    title: Defer Binding
+    page: /approaches/defer-binding
+  plugin-architecture:
+    title: Plugin Architecture
+    page: /approaches/plugin-architecture
+  feature-toggles:
+    title: Feature Toggles
+    page: /approaches/feature-toggles
+  externalized-business-rules:
+    title: Externalized Business Rules
+    page: /approaches/externalized-business-rules
+  consumer-driven-contracts:
+    title: Consumer-Driven Contracts
+    page: /approaches/consumer-driven-contracts
+  open-host-service:
+    title: Open Host Service
+    page: /approaches/open-host-service

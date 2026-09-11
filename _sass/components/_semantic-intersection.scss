@@ -1,0 +1,48 @@
+.scenario-composition-status {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-left: 3px solid currentColor;
+  background: white;
+}
+
+.semantic-card__actions--split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sq-border);
+}
+
+.semantic-card__actions--split a {
+  display: inline-block;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--sq-border);
+  border-radius: 0.5rem;
+  text-decoration: none;
+}
+
+.semantic-card__actions--split .semantic-compose-action {
+  border-color: currentColor;
+  background: white;
+  font-weight: 700;
+}
+
+.scenario-axis-card--combined {
+  border-width: 2px;
+  background: var(--sq-soft);
+}
+
+.scenario-axis-card--conflict {
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.scenario-axis-state--combined {
+  background: linear-gradient(90deg, currentColor 0 50%, transparent 50%);
+}
+
+.scenario-axis-state--conflict {
+  border-radius: 0;
+  transform: rotate(45deg);
+  background: transparent;
+}

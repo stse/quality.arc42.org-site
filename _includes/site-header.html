@@ -21,6 +21,8 @@
         {% endfor %}
       </nav>
 
+      {% include model-view-switcher.html %}
+
       <div class="site-actions">
         <form class="site-search" action="{{ '/search/' | prepend: site.baseurl }}" role="search" data-site-search>
           <label class="sr-only" for="site-search-input">Search Q42</label>

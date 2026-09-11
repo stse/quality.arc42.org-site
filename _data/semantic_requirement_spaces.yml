@@ -1,0 +1,183 @@
+version: "0.1-prototype"
+status: prototype
+scope: >-
+  Concrete requirement instances for the semantic scenario-space prototype.
+  These records deliberately live outside the quality concepts: a quality
+  characteristic constrains a recurring scenario family, while a requirement
+  closes additional coordinates and introduces system-specific acceptance
+  thresholds.
+
+requirements:
+  adding-entity-type-within-5-days:
+    title: "Adding a new entity type within 5 days and ≤ 3 modules"
+    page: /requirements/adding-entity-type-within-5-days
+    source:
+      values: [business]
+      detail: "A product team receives a business requirement for a new entity type."
+    subject:
+      values: [system-or-architecture]
+      detail: "Persistence, domain model, service layer, REST API, and basic UI are in scope."
+    context:
+      values: [development]
+      detail: "A legacy business application is being incrementally modernised toward a modular architecture."
+    stimulus:
+      values: [change]
+      detail: "A new entity type must be added end-to-end."
+    response:
+      values: [accommodate-change]
+      detail: "The architecture allows the new type to be implemented without cascading modifications across unrelated modules."
+    acceptance:
+      - measure: affected-scope
+        label: Existing modules touched
+        operator: "≤"
+        threshold: "3"
+        unit: modules
+      - measure: affected-scope
+        label: Lines changed outside the new module
+        operator: "≤"
+        threshold: "50"
+        unit: lines
+      - measure: elapsed-time
+        label: Implementation time
+        operator: "≤"
+        threshold: "5"
+        unit: working days
+      - label: Existing logic/test modifications
+        operator: "="
+        threshold: "0"
+        unit: modifications
+    closes:
+      - axis: source
+        operation: closes
+        from: Open
+        to: Business-driven change
+      - axis: context
+        operation: closes
+        from: Open
+        to: Legacy modularisation / development
+      - axis: subject
+        operation: narrows
+        from: System / architecture
+        to: Full-stack entity support across persistence, domain, service, REST and UI
+      - axis: stimulus
+        operation: specializes
+        from: Relevant change
+        to: Add a new entity type
+      - axis: evaluation
+        operation: thresholds
+        from: Better/worse ordering only
+        to: ≤ 3 modules, ≤ 50 external lines, ≤ 5 working days
+
+  efficient-change-business-rules:
+    title: "Efficient change of business rules"
+    page: /requirements/luggage-routing
+    source:
+      values: [external-authority]
+      detail: "An official government travel warning is published or changed."
+    subject:
+      values: [business-rules]
+      detail: "Luggage-routing rules for affected origins, destinations, and stopovers."
+    context:
+      values: [regulatory, runtime]
+      detail: "Production routing must remain compliant with current government warnings."
+    stimulus:
+      values: [change]
+      detail: "A relevant official travel warning changes."
+    response:
+      values: [accommodate-change]
+      detail: "The affected routing rules are updated and activated in production."
+    acceptance:
+      - measure: elapsed-time
+        label: Rule rollout latency
+        operator: "≤"
+        threshold: "4"
+        unit: hours
+      - label: Impact correctness
+        operator: "="
+        threshold: "100"
+        unit: percent of affected regression cases
+      - measure: elapsed-time
+        label: Restrictive fallback activation
+        operator: "≤"
+        threshold: "15"
+        unit: minutes
+    closes:
+      - axis: source
+        operation: closes
+        from: Open
+        to: External authority
+      - axis: context
+        operation: closes
+        from: Open
+        to: Regulatory production context
+      - axis: subject
+        operation: narrows
+        from: System / architecture
+        to: Luggage-routing business rules
+      - axis: stimulus
+        operation: specializes
+        from: Relevant change
+        to: Official travel warning changed
+      - axis: evaluation
+        operation: thresholds
+        from: Better/worse ordering only
+        to: ≤ 4 h rollout; ≤ 15 min fallback
+
+  reinterpret-domain-concept-from-historical-facts:
+    title: "Reinterpret a domain concept from historical facts"
+    page: /requirements/reinterpret-domain-concept-from-historical-facts
+    source:
+      values: [business]
+      detail: "The business introduces a revised interpretation of an existing domain concept."
+    subject:
+      values: [persistent-information]
+      detail: "Historical source facts and interpretations derived from them."
+    context:
+      values: [development]
+      detail: "A production system already contains history captured before the revised interpretation existed."
+    stimulus:
+      values: [change]
+      detail: "The revised interpretation must be applied retrospectively to historical cases."
+    response:
+      values: [accommodate-change]
+      detail: "Previous and revised interpretations can be evaluated from the same unchanged historical facts."
+    acceptance:
+      - measure: information-loss
+        label: Historical source facts modified, deleted, or rewritten
+        operator: "="
+        threshold: "0"
+        unit: facts
+      - measure: affected-scope
+        label: Existing modules/components changed
+        operator: "≤"
+        threshold: "3"
+        unit: modules/components
+      - label: Historical cases evaluable with pre-existing information
+        operator: "="
+        threshold: "100"
+        unit: percent of representative sample
+      - label: Revised results traceable to source facts
+        operator: "="
+        threshold: "100"
+        unit: percent of sample
+    closes:
+      - axis: source
+        operation: closes
+        from: Open
+        to: Business / domain
+      - axis: context
+        operation: closes
+        from: Open
+        to: Existing production history
+      - axis: subject
+        operation: narrows
+        from: System / architecture
+        to: Persistent historical information and derived interpretation
+      - axis: stimulus
+        operation: specializes
+        from: Relevant change
+        to: Revised domain interpretation
+      - axis: evaluation
+        operation: thresholds
+        from: Better/worse ordering only
+        to: 0 source facts rewritten; ≤ 3 existing components changed; 100% traceability

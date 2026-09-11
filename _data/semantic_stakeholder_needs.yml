@@ -1,0 +1,44 @@
+change-cost:
+  label: Change may become too costly
+  statement: "Future changes could become too slow, expensive, or risky."
+  dimensions: [flexible, maintainable, efficient]
+
+future-lock-in:
+  label: Today's decisions may trap us
+  statement: "Decisions we make today could close off options we may need later."
+  dimensions: [flexible, maintainable]
+
+service-disruption:
+  label: Service may fail when conditions deteriorate
+  statement: "The service could stop delivering what is needed when something fails or degrades."
+  dimensions: [reliable, operable]
+
+operational-control:
+  label: We may lose operational understanding or control
+  statement: "Operators may be unable to understand, influence, or safely manage what the running system is doing."
+  dimensions: [operable, reliable]
+
+misuse-or-attack:
+  label: Information or capabilities may be misused
+  statement: "Information or system capabilities could be exposed, altered, or abused without authorization."
+  dimensions: [secure]
+
+unacceptable-harm:
+  label: The system may cause unacceptable harm
+  statement: "System behavior could create unacceptable risk to people, property, or the environment."
+  dimensions: [safe]
+
+user-goal-failure:
+  label: Users may not achieve their goals
+  statement: "Intended users may be unable to accomplish their tasks effectively and appropriately."
+  dimensions: [usable, suitable]
+
+resource-pressure:
+  label: Outcomes may consume too much time or resources
+  statement: "Required outcomes may take too much time, capacity, energy, infrastructure, or money."
+  dimensions: [efficient]
+
+wrong-capability:
+  label: The system may not provide what is actually needed
+  statement: "The delivered capabilities or results may not fit the stakeholders' intended purpose."
+  dimensions: [suitable]

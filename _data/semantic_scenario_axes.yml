@@ -1,0 +1,227 @@
+version: "0.1-prototype"
+status: prototype
+scope: >-
+  Additional scenario-space axes used to show which coordinates a quality
+  concept constrains and which remain intentionally open. Open does not mean
+  unknown; it means the quality concept applies across that coordinate and a
+  concrete requirement may constrain it later.
+
+sources:
+  stakeholder:
+    label: Stakeholder
+  business:
+    label: Business / domain
+  maintainer:
+    label: Maintainer / developer
+  operator:
+    label: Operator
+  user:
+    label: User
+  environment:
+    label: Environment
+  external-system:
+    label: External system
+  external-authority:
+    label: External authority / regulator
+  malicious-actor:
+    label: Malicious actor
+  fault-source:
+    label: Fault / disturbance source
+
+subjects:
+  system-or-architecture:
+    label: System / architecture
+  component:
+    label: Component / module
+  persistent-information:
+    label: Persistent information
+  business-rules:
+    label: Business rules / policy
+  configuration:
+    label: Configuration
+  interface:
+    label: Interface / integration boundary
+  deployment:
+    label: Deployment / infrastructure
+  service:
+    label: Running service
+
+contexts:
+  development:
+    label: Development / change
+  runtime:
+    label: Runtime
+  deployment:
+    label: Deployment / transition
+  degraded:
+    label: Degraded / failure conditions
+  hostile:
+    label: Hostile conditions
+  resource-constrained:
+    label: Resource-constrained
+  unresolved-knowledge:
+    label: Relevant knowledge unresolved
+  lifecycle:
+    label: Lifecycle transition
+  regulatory:
+    label: Regulatory constraint
+
+quality_spaces:
+  evolvability:
+    source:
+      mode: open
+      note: "The need for change may originate from business, technology, regulation, maintainers, users, or the environment. Evolvability does not depend on one source."
+    subject:
+      mode: constrained
+      values: [system-or-architecture]
+      note: "The quality objective concerns the system or architecture being changed; a requirement may narrow this to a component, data model, interface, or other artifact."
+    context:
+      mode: open
+      note: "Evolvability applies across many change contexts. A concrete requirement should state the relevant lifecycle, organizational, regulatory, or technical context."
+    stimulus:
+      mode: constrained
+      values: [change]
+    response:
+      mode: constrained
+      values: [accommodate-change]
+    evaluation:
+      mode: constrained
+      values: [change-effort, affected-scope, regression-risk]
+
+  extensibility:
+    source:
+      mode: open
+    subject:
+      mode: constrained
+      values: [system-or-architecture]
+    context:
+      mode: open
+    stimulus:
+      mode: constrained
+      values: [change]
+      note: "This specialization narrows the relevant change to adding capability."
+    response:
+      mode: constrained
+      values: [accommodate-change]
+    evaluation:
+      mode: constrained
+      values: [change-effort, affected-scope]
+
+  replaceability:
+    source:
+      mode: open
+    subject:
+      mode: constrained
+      values: [component]
+    context:
+      mode: open
+    stimulus:
+      mode: constrained
+      values: [change]
+      note: "The relevant change replaces an existing system element while preserving its required role."
+    response:
+      mode: constrained
+      values: [accommodate-change]
+    evaluation:
+      mode: constrained
+      values: [change-effort, affected-scope]
+
+  agility:
+    source:
+      mode: open
+    subject:
+      mode: open
+      note: "Agility can qualify changes to different subjects; it contributes an evaluation lens rather than a single artifact scope."
+    context:
+      mode: open
+    stimulus:
+      mode: constrained
+      values: [change, context-change, anticipated-variation, demand-change, environment-transfer]
+    response:
+      mode: open
+      note: "The response depends on the underlying change characteristic being qualified by agility."
+    evaluation:
+      mode: constrained
+      values: [elapsed-time]
+
+  optionality:
+    source:
+      mode: open
+    subject:
+      mode: open
+      note: "Optionality can concern architecture, technology, providers, persistent information, policy, or other decision subjects."
+    context:
+      mode: constrained
+      values: [unresolved-knowledge]
+    stimulus:
+      mode: constrained
+      values: [unresolved-knowledge]
+      note: "A commitment becomes relevant while information needed to justify that commitment is unresolved."
+    response:
+      mode: constrained
+      values: [keep-open]
+    evaluation:
+      mode: constrained
+      values: [viable-alternatives, irreversible-commitment, information-loss]
+
+# These deltas are explanatory graph semantics. They state what changes when
+# traversing an edge from one quality-space anchor to another. They are kept
+# explicit in the prototype instead of being inferred from labels alone.
+relation_deltas:
+  evolvability:
+    extensibility:
+      relation: specialized-by
+      summary: "Narrows the kind of relevant change to adding capability."
+      changes:
+        - axis: stimulus
+          operation: narrows
+          from: Relevant change
+          to: Additive change / new capability
+        - axis: evaluation
+          operation: focuses
+          from: Change effort + affected scope + regression risk
+          to: Change effort + affected scope
+    replaceability:
+      relation: specialized-by
+      summary: "Narrows the change to replacement and the subject toward the element being replaced."
+      changes:
+        - axis: subject
+          operation: narrows
+          from: System / architecture
+          to: Component / replaceable system element
+        - axis: stimulus
+          operation: narrows
+          from: Relevant change
+          to: Replacement of an existing element
+    agility:
+      relation: overlaps
+      summary: "Intersects the change space with an elapsed-time evaluation lens."
+      changes:
+        - axis: evaluation
+          operation: adds-lens
+          from: Change effort / scope / regression risk
+          to: Elapsed time
+        - axis: response
+          operation: broadens
+          from: Accommodate change
+          to: Depends on the underlying change/adaptation characteristic
+    optionality:
+      relation: overlaps
+      summary: "Moves to the pre-commitment part of the change space where relevant knowledge is unresolved."
+      changes:
+        - axis: context
+          operation: constrains
+          from: Open
+          to: Relevant knowledge unresolved
+        - axis: stimulus
+          operation: shifts
+          from: Relevant change
+          to: Commitment point under unresolved knowledge
+        - axis: response
+          operation: shifts
+          from: Accommodate change
+          to: Preserve relevant alternatives
+        - axis: evaluation
+          operation: shifts
+          from: Effort / scope / regression risk
+          to: Viable alternatives / irreversible commitment / information loss
